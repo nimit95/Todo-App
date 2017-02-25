@@ -24,7 +24,7 @@ public class DatabseColumns {
     @NotNull
     public static final String URL = "url";
 
-    @DataType(DataType.Type.TEXT)
+    @DataType(DataType.Type.INTEGER)
     @NotNull
     public static final String PRIORITY = "priority";
 
