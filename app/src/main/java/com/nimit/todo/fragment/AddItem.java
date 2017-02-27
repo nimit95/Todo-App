@@ -21,6 +21,7 @@ import android.widget.Spinner;
 import com.nimit.todo.R;
 import com.nimit.todo.database.DatabseColumns;
 import com.nimit.todo.database.QuoteProvider;
+import com.nimit.todo.helper.UpdateHelper;
 import com.nimit.todo.model.Todo;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class AddItem extends DialogFragment {
     private String mParam1,date;
     private DatePicker datePicker;
     private String mParam2;
-
+    private UpdateHelper updateHelper;
     public AddItem() {
         // Required empty public constructor
     }
@@ -82,6 +83,7 @@ public class AddItem extends DialogFragment {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(title);
         alertDialogBuilder.setView(view);
+        updateHelper = (UpdateHelper) getActivity();
         datePicker = (DatePicker) view.findViewById(R.id.date_picker);
         date = datePicker.getDayOfMonth() + "-" + (datePicker.getMonth() + 1) + "-" + datePicker.getYear();
         datePicker.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {
