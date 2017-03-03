@@ -1,9 +1,11 @@
 package com.nimit.todo.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
@@ -38,12 +40,14 @@ public class ItemListCursorAdapter extends CursorRecyclerViewAdapter<ItemListCur
         private CardView singleItem;
         TextView dueDate;
         TextView todoDescription;
+        private ImageView deleteItem;
         public ViewHolder(View view) {
             super(view);
             headline = (TextView) view.findViewById(R.id.item_view);
             singleItem = (CardView) view.findViewById(R.id.single_item);
             dueDate = (TextView) view.findViewById(R.id.due_date);
             todoDescription = (TextView) view.findViewById(R.id.todo_content);
+            deleteItem = (ImageView) view.findViewById(R.id.delete);
           /*  image = (ImageView) view.findViewById(R.id.thumbnail);
 
             view.setOnClickListener(this);
@@ -88,7 +92,30 @@ public class ItemListCursorAdapter extends CursorRecyclerViewAdapter<ItemListCur
         /*Picasso.with(context)
                 .load(cursor.getString(cursor.getColumnIndex("url")))
                 .into(viewHolder.image);*/
+        viewHolder.deleteItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*
+                new AlertDialog.Builder(context).setTitle("Delete").setMessage("Are you sure you want to Delete ?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
 
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });*/
+                cursor = context.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI, null, null, null, null);
+                cursor.moveToPosition(viewHolder.getAdapterPosition());
+                context.getContentResolver().delete(QuoteProvider.Quotes.CONTENT_URI, DatabseColumns.ID+"=?",
+                        new String[]{String.valueOf(cursor.getInt(cursor.getColumnIndex(DatabseColumns.ID)))});
+                cursor.close();
+            }
+        });
         Log.e("pos",viewHolder.getAdapterPosition()+"");
 
         viewHolder.singleItem.setOnClickListener(new View.OnClickListener() {
