@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.nimit.todo.R;
 import com.nimit.todo.database.DatabseColumns;
@@ -40,16 +42,23 @@ public class AddItem extends DialogFragment {
     private DatePicker datePicker;
     private String mParam2;
     private UpdateHelper updateHelper;
+    static int index;
+    static Todo todo;
     public AddItem() {
         // Required empty public constructor
     }
 
-    public static AddItem newInstance(String param1, String param2) {
+    public static AddItem newInstance(String param1, Todo todo, int i) {
         AddItem fragment = new AddItem();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        //args.put(ARG_PARAM2, todo);
         fragment.setArguments(args);
+        if(param1.equalsIgnoreCase("edit"))
+            index = i;
+        else
+            index = -20;
+        AddItem.todo = todo;
         return fragment;
     }
 
@@ -61,7 +70,7 @@ public class AddItem extends DialogFragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-/*
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -69,7 +78,7 @@ public class AddItem extends DialogFragment {
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         return inflater.inflate(R.layout.fragment_add_item, container, false);
-    }*/
+    }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         String title = getArguments().getString("title");
@@ -94,8 +103,15 @@ public class AddItem extends DialogFragment {
 
             }
         });
+        if (index !=-20)
+        {
+            todoTitle.setText(todo.getTitle(), TextView.BufferType.EDITABLE);
+            todoDescription.setText(todo.getDescription(), TextView.BufferType.EDITABLE);
+            prioritySpinner.setSelection(todo.getPriority());
+
+        }
         //alertDialogBuilder.setMessage("Are you sure?");
-        alertDialogBuilder.setPositiveButton("ADD",  new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setTitle("Add a New ToDo").setPositiveButton("ADD",  new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // on success
@@ -103,6 +119,11 @@ public class AddItem extends DialogFragment {
                         todoDescription.getText().toString(),date,prioritySpinner.getSelectedItemPosition(),
                             calendar.getTimeInMillis()
                         );
+                Log.e("jaa",todo.getTitle());
+                if(index==-20)
+                    updateHelper.addItem(todo, 0);
+                else
+                    updateHelper.updateItem(todo, index );
             }
         });
         alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -114,6 +135,4 @@ public class AddItem extends DialogFragment {
 
         return alertDialogBuilder.create();
     }
-
-
 }

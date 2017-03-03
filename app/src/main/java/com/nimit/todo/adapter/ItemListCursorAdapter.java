@@ -2,30 +2,48 @@ package com.nimit.todo.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.provider.ContactsContract;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nimit.todo.R;
+import com.nimit.todo.database.DatabseColumns;
+import com.nimit.todo.database.QuoteProvider;
+import com.nimit.todo.fragment.AddItem;
+import com.nimit.todo.helper.UpdateHelper;
+import com.nimit.todo.model.Todo;
 
 public class ItemListCursorAdapter extends CursorRecyclerViewAdapter<ItemListCursorAdapter.ViewHolder> {
 
     static private Context context;
-
+    private UpdateHelper updateHelper;
+    private Cursor cursor;
     public ItemListCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor);
         this.context = context;
+        updateHelper = (UpdateHelper)context;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView headline;
-
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView headline;
+        private CardView singleItem;
+        TextView dueDate;
+        TextView todoDescription;
         public ViewHolder(View view) {
             super(view);
             headline = (TextView) view.findViewById(R.id.item_view);
+            singleItem = (CardView) view.findViewById(R.id.single_item);
+            dueDate = (TextView) view.findViewById(R.id.due_date);
+            todoDescription = (TextView) view.findViewById(R.id.todo_content);
           /*  image = (ImageView) view.findViewById(R.id.thumbnail);
 
             view.setOnClickListener(this);
@@ -33,7 +51,7 @@ public class ItemListCursorAdapter extends CursorRecyclerViewAdapter<ItemListCur
 
 
         }
-
+        /*
         @Override
         public void onClick(View view) {
 
@@ -42,9 +60,15 @@ public class ItemListCursorAdapter extends CursorRecyclerViewAdapter<ItemListCur
             c.moveToPosition(getAdapterPosition());
 
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.YOUTUBE_VIDEO_URL + c.getString(c.getColumnIndex("videoId"))));
-            context.startActivity(intent);*/
-        }
+            context.startActivity(intent);
+
+        }*/
     }
+    /*private void showAlertDialog() {
+        FragmentManager fm = context.
+        AddItem alertDialog = AddItem.newInstance("new",null);
+        alertDialog.show(fm, "fragment_alert");
+    }*/
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -57,11 +81,32 @@ public class ItemListCursorAdapter extends CursorRecyclerViewAdapter<ItemListCur
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
-        viewHolder.headline.setText(cursor.getString(cursor.getColumnIndex("item")));
+    public void onBindViewHolder(final ViewHolder viewHolder, Cursor c) {
+        viewHolder.headline.setText(c.getString(c.getColumnIndex("item")));
+        viewHolder.todoDescription.setText(c.getString(c.getColumnIndex(DatabseColumns.DESCRIPTION)));
+        viewHolder.dueDate.setText(c.getString(c.getColumnIndex(DatabseColumns.DUE)));
         /*Picasso.with(context)
                 .load(cursor.getString(cursor.getColumnIndex("url")))
                 .into(viewHolder.image);*/
+
+        Log.e("pos",viewHolder.getAdapterPosition()+"");
+
+        viewHolder.singleItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cursor = context.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI, null, null, null, null);
+                cursor.moveToPosition(viewHolder.getAdapterPosition());
+                updateHelper.showFragment(new Todo(cursor.getString(cursor.getColumnIndex(DatabseColumns.ITEM)),
+                                                    cursor.getString(cursor.getColumnIndex(DatabseColumns.DESCRIPTION)),
+                                                    cursor.getString(cursor.getColumnIndex(DatabseColumns.DUE)),
+                                                    cursor.getInt(cursor.getColumnIndex(DatabseColumns.PRIORITY)),
+                                                    0),cursor.getInt(cursor.getColumnIndex(DatabseColumns.ID)));
+                Log.e("in Adapter", cursor.getString(cursor.getColumnIndex(DatabseColumns.ITEM)));
+                cursor.close();
+            }
+        });
+       //cursor.close();
     }
+
 
 }

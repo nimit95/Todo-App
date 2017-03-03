@@ -7,5 +7,7 @@ import com.nimit.todo.model.Todo;
  */
 
 public interface UpdateHelper {
-    void UpdateItem(Todo todo, int index);
+    void updateItem(Todo todo, int index);
+    void addItem (Todo todo, int index);
+    void showFragment(Todo todo, int index);
 }

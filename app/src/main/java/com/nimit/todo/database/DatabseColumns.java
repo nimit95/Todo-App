@@ -20,10 +20,6 @@ public class DatabseColumns {
     @NotNull
     public static final String DESCRIPTION = "description";
 
-    @DataType(DataType.Type.TEXT)
-    @NotNull
-    public static final String URL = "url";
-
     @DataType(DataType.Type.INTEGER)
     @NotNull
     public static final String PRIORITY = "priority";

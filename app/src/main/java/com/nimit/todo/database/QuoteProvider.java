@@ -9,7 +9,7 @@ import net.simonvt.schematic.annotation.TableEndpoint;
 
 @ContentProvider(authority = QuoteProvider.AUTHORITY, database = DatabseDefinition.class)
 public class QuoteProvider {
-    public static final String AUTHORITY = "com.nimit.todo";
+    public static final String AUTHORITY = "com.nimit.todo.database.QuoteProvider";
 
     static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 

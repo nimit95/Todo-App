@@ -19,8 +19,8 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         app:fabSize="normal"
-        android:layout_margin="5dp"
+        android:layout_margin="10dp"
         android:layout_gravity="bottom|end"
-        app:srcCompat="@mipmap/ic_launcher"
+        android:src="@drawable/ic_add_white_24dp"
         android:id="@+id/add" />
 </android.support.design.widget.CoordinatorLayout>
