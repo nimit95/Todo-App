@@ -35,7 +35,7 @@ public class AddItem extends DialogFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private EditText todoTitle, todoDescription;
-    private String[] priority={"High", "Low"};
+    private String[] priority={"High", "Medium", "Low"};
     private Spinner prioritySpinner;
     // TODO: Rename and change types of parameters
     private String mParam1,date;

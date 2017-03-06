@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -89,6 +90,17 @@ public class ItemListCursorAdapter extends CursorRecyclerViewAdapter<ItemListCur
         viewHolder.headline.setText(c.getString(c.getColumnIndex("item")));
         viewHolder.todoDescription.setText(c.getString(c.getColumnIndex(DatabseColumns.DESCRIPTION)));
         viewHolder.dueDate.setText(c.getString(c.getColumnIndex(DatabseColumns.DUE)));
+        switch (c.getInt(c.getColumnIndex(DatabseColumns.PRIORITY))){
+            case 0:
+                viewHolder.singleItem.setCardBackgroundColor(ContextCompat.getColor(context, R.color.priorityLow));
+                break;
+            case 1:
+                viewHolder.singleItem.setCardBackgroundColor(ContextCompat.getColor(context, R.color.priorityMedium));
+                break;
+            case 2:
+                viewHolder.singleItem.setCardBackgroundColor(ContextCompat.getColor(context, R.color.priorityHigh));
+                break;
+        }
         /*Picasso.with(context)
                 .load(cursor.getString(cursor.getColumnIndex("url")))
                 .into(viewHolder.image);*/
